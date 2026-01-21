@@ -10,7 +10,10 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || '*',
+  credentials: true
+}));
 app.use(express.json());
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -20,21 +23,38 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
 
+app.get('/', (_req, res) => {
+  res.json({ message: 'HRMS API is running', docs: '/api-docs' });
+});
+
 const PORT = process.env.PORT || 5000;
 
+let isConnected = false;
+
+const startServer = async () => {
+  if (!isConnected) {
+    await connectDB();
+    isConnected = true;
+    console.log('Connected to MongoDB');
+  }
+};
+
 if (process.env.NODE_ENV !== 'test') {
-  connectDB()
-    .then(() => {
-      console.log('Connected to MongoDB');
-      app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-        console.log(`API Docs available at http://localhost:${PORT}/api-docs`);
+  if (process.env.VERCEL) {
+    startServer();
+  } else {
+    startServer()
+      .then(() => {
+        app.listen(PORT, () => {
+          console.log(`Server running on port ${PORT}`);
+          console.log(`API Docs available at http://localhost:${PORT}/api-docs`);
+        });
+      })
+      .catch((error) => {
+        console.error('MongoDB connection error:', error);
+        process.exit(1);
       });
-    })
-    .catch((error) => {
-      console.error('MongoDB connection error:', error);
-      process.exit(1);
-    });
+  }
 }
 
 export default app;
