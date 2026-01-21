@@ -17,11 +17,6 @@ A lightweight HRMS application for managing employees and tracking attendance.
 - **Email:** admin@hrms.com
 - **Password:** admin123
 
-### Employee Accounts
-| Name | Email | Password |
-|------|-------|----------|
-| John Doe | john@hrms.com | john123 |
-| Jane Smith | jane@hrms.com | jane123 |
 
 ## Tech Stack
 
