@@ -2,6 +2,15 @@
 
 A lightweight HRMS application for managing employees and tracking attendance.
 
+## Live Demo
+
+| Resource | Link |
+|----------|------|
+| GitHub Repository | [https://github.com/Diavalraco/Task](https://github.com/Diavalraco/Task) |
+| Frontend (Live) | [https://task-orpin-eight.vercel.app](https://task-orpin-eight.vercel.app) |
+| Backend API | [https://task-roy9.vercel.app](https://task-roy9.vercel.app) |
+| API Documentation (Swagger) | [https://task-roy9.vercel.app/api-docs](https://task-roy9.vercel.app/api-docs) |
+
 ## Tech Stack
 
 ### Backend
