@@ -7,9 +7,6 @@ const Employees = () => {
   const [employees, setEmployees] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deletingEmployee, setDeletingEmployee] = useState<User | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<User | null>(null);
   const [formData, setFormData] = useState<CreateEmployeeData & { role?: Role }>({
     email: '',
@@ -102,28 +99,14 @@ const Employees = () => {
     }
   };
 
-  const handleOpenDeleteModal = (employee: User) => {
-    setDeletingEmployee(employee);
-    setShowDeleteModal(true);
-  };
-
-  const handleCloseDeleteModal = () => {
-    setShowDeleteModal(false);
-    setDeletingEmployee(null);
-  };
-
-  const handleDelete = async () => {
-    if (!deletingEmployee) return;
-    setIsDeleting(true);
+  const handleDelete = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this employee?')) return;
 
     try {
-      await employeeApi.delete(deletingEmployee._id);
-      handleCloseDeleteModal();
+      await employeeApi.delete(id);
       fetchEmployees();
     } catch (error) {
       console.error('Failed to delete employee:', error);
-    } finally {
-      setIsDeleting(false);
     }
   };
 
@@ -200,7 +183,7 @@ const Employees = () => {
                       Edit
                     </button>
                     <button
-                      onClick={() => handleOpenDeleteModal(employee)}
+                      onClick={() => handleDelete(employee._id)}
                       className="text-red-600 hover:text-red-900"
                     >
                       Delete
@@ -313,37 +296,6 @@ const Employees = () => {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
-
-      {showDeleteModal && deletingEmployee && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-sm w-full p-6">
-            <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
-              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 text-center mb-2">Delete Employee</h3>
-            <p className="text-gray-600 text-center mb-6">
-              Are you sure you want to delete <span className="font-medium">{deletingEmployee.name}</span>? This action cannot be undone.
-            </p>
-            <div className="flex space-x-3">
-              <button
-                onClick={handleCloseDeleteModal}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDelete}
-                disabled={isDeleting}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors"
-              >
-                {isDeleting ? 'Deleting...' : 'Delete'}
-              </button>
-            </div>
           </div>
         </div>
       )}

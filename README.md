@@ -2,22 +2,6 @@
 
 A lightweight HRMS application for managing employees and tracking attendance.
 
-## Live Demo
-
-| Resource | Link |
-|----------|------|
-| GitHub Repository | [https://github.com/Diavalraco/Task](https://github.com/Diavalraco/Task) |
-| Frontend (Live) | [https://task-orpin-eight.vercel.app](https://task-orpin-eight.vercel.app) |
-| Backend API | [https://task-roy9.vercel.app](https://task-roy9.vercel.app) |
-| API Documentation (Swagger) | [https://task-roy9.vercel.app/api-docs](https://task-roy9.vercel.app/api-docs) |
-
-## Demo Credentials
-
-### Admin Account
-- **Email:** admin@hrms.com
-- **Password:** admin123
-
-
 ## Tech Stack
 
 ### Backend
@@ -136,18 +120,6 @@ npm run dev
 
 The frontend will run on `http://localhost:5173` and proxy API requests to the backend.
 
-## Seed Database (Create Admin & Users)
-
-To create the admin and demo users, run:
-```bash
-cd backend
-npm run seed
-```
-
-This will create:
-- 1 Admin account (admin@hrms.com)
-- 2 Employee accounts (john@hrms.com, jane@hrms.com)
-
 ## Running Tests
 
 ```bash
@@ -160,6 +132,13 @@ All 35 test cases cover:
 - Employee management (CRUD operations, authorization)
 - Attendance (check-in, check-out, history)
 - Authorization (token validation, role-based access)
+
+## API Documentation
+
+Once the backend is running, visit:
+```
+http://localhost:5000/api-docs
+```
 
 ## API Endpoints
 
@@ -181,6 +160,28 @@ All 35 test cases cover:
 - `GET /api/attendance/my` - Get own attendance
 - `GET /api/attendance/today` - Get today's status
 - `GET /api/attendance/report` - Get report (Admin only)
+
+## Deployment
+
+### Backend (Render)
+
+1. Create a new Web Service on Render
+2. Connect your GitHub repository
+3. Set root directory to `backend`
+4. Set build command: `npm install && npm run build`
+5. Set start command: `npm start`
+6. Add environment variables:
+   - `MONGODB_URI` - MongoDB Atlas connection string
+   - `JWT_SECRET` - Secret key for JWT
+   - `JWT_EXPIRES_IN` - Token expiration (e.g., 7d)
+   - `NODE_ENV` - production
+
+### Frontend (Vercel)
+
+1. Import project to Vercel
+2. Set root directory to `frontend`
+3. Update `vercel.json` with your backend URL
+4. Deploy
 
 ## Database Schema
 
@@ -206,6 +207,7 @@ All 35 test cases cover:
   checkOut: Date,
   timestamps: true
 }
+// Compound index on (userId, date) for uniqueness
 ```
 
 ## License

@@ -52,14 +52,16 @@ const Reports = () => {
     return `${hours}h ${minutes}m`;
   };
 
-  const getEmployeeName = (userId: string | User): string => {
+  const getEmployeeName = (userId: string | User | null | undefined): string => {
+    if (!userId) return 'Deleted User';
     if (typeof userId === 'object' && userId.name) {
       return userId.name;
     }
     return 'Unknown';
   };
 
-  const getEmployeeEmail = (userId: string | User): string => {
+  const getEmployeeEmail = (userId: string | User | null | undefined): string => {
+    if (!userId) return '';
     if (typeof userId === 'object' && userId.email) {
       return userId.email;
     }
@@ -141,13 +143,18 @@ const Reports = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {attendance.map((record) => (
+                {attendance.map((record) => {
+                  const employeeName = getEmployeeName(record.userId);
+                  const employeeEmail = getEmployeeEmail(record.userId);
+                  return (
                   <tr key={record._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {getEmployeeName(record.userId)}
+                      <div className={`text-sm font-medium ${!record.userId || (typeof record.userId === 'object' && !record.userId.name) ? 'text-gray-400 italic' : 'text-gray-900'}`}>
+                        {employeeName}
                       </div>
-                      <div className="text-sm text-gray-500">{getEmployeeEmail(record.userId)}</div>
+                      {employeeEmail && (
+                        <div className="text-sm text-gray-500">{employeeEmail}</div>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
@@ -183,7 +190,8 @@ const Reports = () => {
                       </span>
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
                 {attendance.length === 0 && (
                   <tr>
                     <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
